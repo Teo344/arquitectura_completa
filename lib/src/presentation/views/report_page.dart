@@ -7,6 +7,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+
 import '../viewmodels/operator_viewmodel.dart';
 import '../../domain/entities/result_operator.dart';
 
@@ -41,9 +42,9 @@ class ReportPage extends StatelessWidget {
       ];
     }).toList();
 
-    // Si no puedes usar PdfGoogleFonts, usa esta alternativa simple:
-    final regularFont = pw.Font.times();
-    final boldFont = pw.Font.timesBold();
+final regularFont = await PdfGoogleFonts.notoSansRegular();
+final boldFont = await PdfGoogleFonts.notoSansBold();
+
 
     pdf.addPage(
       pw.Page(
@@ -53,7 +54,6 @@ class ReportPage extends StatelessWidget {
             children: [
               pw.Text(
                 'Reporte de Aumentos de Operarios',
-                // Usar una fuente compatible aquí
                 style: pw.TextStyle(fontSize: 24, font: boldFont),
               ),
               pw.SizedBox(height: 20),
@@ -61,7 +61,6 @@ class ReportPage extends StatelessWidget {
                 headers: headers,
                 data: data,
                 border: pw.TableBorder.all(color: PdfColors.grey600),
-                // Asegúrate de que los estilos de encabezado y celda usen fuentes compatibles
                 headerStyle: pw.TextStyle(
                   font: boldFont,
                   color: PdfColors.white,
@@ -85,34 +84,32 @@ class ReportPage extends StatelessWidget {
     return pdf;
   }
 
-  Future<void> _sharePdf(
-    BuildContext context,
-    List<ResultOperator> history,
-  ) async {
-    if (history.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No hay datos para generar el reporte.')),
-      );
-      return;
-    }
-
-    try {
-      final pdf = await _generatePdfDocument(history);
-      final bytes = await pdf.save();
-
-      final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/reporte_operarios.pdf');
-      await file.writeAsBytes(bytes);
-
-      await Share.shareXFiles([
-        XFile(file.path),
-      ], text: 'Reporte de aumentos de salario de operarios.');
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error al compartir PDF: $e')));
-    }
+Future<void> _sharePdf(
+  BuildContext context,
+  List<ResultOperator> history,
+) async {
+  if (history.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('No hay datos para generar el reporte.')),
+    );
+    return;
   }
+
+  try {
+    final pdf = await _generatePdfDocument(history);
+
+    await Printing.sharePdf(
+      bytes: await pdf.save(),
+      filename: 'reporte_operarios.pdf',
+    );
+
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error al compartir PDF: $e')),
+    );
+  }
+}
+
 
   Future<void> _handlePdfAction(
     BuildContext context,
@@ -141,7 +138,7 @@ class ReportPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reporte PDF'),
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -169,7 +166,6 @@ class ReportPage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
                   padding: const EdgeInsets.symmetric(vertical: 15),
                 ),
               ),
@@ -178,14 +174,13 @@ class ReportPage extends StatelessWidget {
               // Botón para Compartir
               OutlinedButton.icon(
                 onPressed: () => _sharePdf(context, viewmodel.history),
-                icon: const Icon(Icons.share, color: Colors.red),
+                icon: const Icon(Icons.share, color: Colors.white),
                 label: const Text(
                   'Compartir Reporte',
-                  style: TextStyle(fontSize: 18, color: Colors.red),
+                  style: TextStyle(fontSize: 18),
                 ),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 15),
-                  side: const BorderSide(color: Colors.red),
                 ),
               ),
             ],

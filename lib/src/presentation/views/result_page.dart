@@ -14,8 +14,7 @@ class ResultPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Resultado del Cálculo'),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -28,7 +27,6 @@ class ResultPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
               ),
             ),
             const Divider(height: 30, thickness: 2),
@@ -78,10 +76,9 @@ class ResultPage extends StatelessWidget {
                 },
                 label: const Text(
                   'Nuevo Cálculo',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 16),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 ),
               ),

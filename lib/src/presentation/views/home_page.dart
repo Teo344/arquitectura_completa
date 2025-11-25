@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
       final antique = double.tryParse(_antiqueController.text) ?? 0.0;
 
       final viewmodel = Provider.of<OperatorViewmodel>(context, listen: false);
-      
+
       final ResultOperator result = viewmodel.calculate(salary, antique);
 
       Navigator.of(context).pushNamed(
@@ -44,123 +44,143 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cálculo de Aumento de Salario'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        actions: [
-          // Botón para ir a la Pantalla de Reporte PDF
-          IconButton(
-            icon: const Icon(Icons.picture_as_pdf),
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppRoute.report);
-            },
-            tooltip: 'Reporte PDF',
-          ),
-        ],
+        title: const Text('Aumento Salarial'),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
-      // Drawer para ir a la Pantalla de Historial
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: const Text(
-                'Navegación',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Inicio'),
-              onTap: () {
-                Navigator.of(context).pop(); // Cierra el Drawer
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.history),
-              title: const Text('Historial de Cálculos'),
-              onTap: () {
-                // Navega a la ruta de historial
-                Navigator.of(context).popAndPushNamed(AppRoute.history);
-              },
-            ),
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // Campo para Salario
-              TextFormField(
-                controller: _salaryController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Salario Actual',
-                  hintText: 'Ej: 450.00',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.attach_money),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese el salario.';
-                  }
-                  if (double.tryParse(value) == null || double.parse(value) <= 0) {
-                    return 'Ingrese un valor numérico positivo.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              
-              // Campo para Antigüedad
-              TextFormField(
-                controller: _antiqueController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Años de Antigüedad',
-                  hintText: 'Ej: 12',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.access_time),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese los años de antigüedad.';
-                  }
-                  if (double.tryParse(value) == null || double.parse(value) < 0) {
-                    return 'Ingrese un valor numérico positivo o cero.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 30),
 
-              // Botón de Cálculo
-              ElevatedButton.icon(
-                onPressed: _calculateAndNavigate,
-                icon: const Icon(Icons.calculate, color: Colors.white),
-                label: const Text(
-                  'Calcular Aumento',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(25.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+
+                const Icon(
+                  Icons.monetization_on,
+                  size: 100,
+                  color: Colors.green,
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  "Calculadora de Incremento Salarial",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                const SizedBox(height: 30),
+
+                TextFormField(
+                  controller: _salaryController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Salario Actual',
+                    hintText: 'Ej: 450.00',
+                    labelStyle: TextStyle(color: Colors.black),
+                    hintStyle: TextStyle(color: Colors.black45),
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.attach_money, color: Colors.black),
+                  ),
+                  style: const TextStyle(color: Colors.black),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese el salario.';
+                    }
+                    if (double.tryParse(value) == null || double.parse(value) <= 0) {
+                      return 'Ingrese un valor numérico positivo.';
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
+                TextFormField(
+                  controller: _antiqueController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Años de Antigüedad',
+                    hintText: 'Ej: 12',
+                    labelStyle: TextStyle(color: Colors.black),
+                    hintStyle: TextStyle(color: Colors.black45),
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.access_time, color: Colors.black),
+                  ),
+                  style: const TextStyle(color: Colors.black),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese los años de antigüedad.';
+                    }
+                    if (double.tryParse(value) == null || double.parse(value) < 0) {
+                      return 'Ingrese un número positivo o cero.';
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 30),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _calculateAndNavigate,
+                    icon: const Icon(Icons.calculate, color: Colors.white),
+                    label: const Text(
+                      'Calcular Aumento',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 20),
+
+                // ✔ NUEVOS BOTONES EN FILA
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pushNamed(AppRoute.history),
+                        icon: const Icon(Icons.history, color: Colors.white),
+                        label: const Text('Historial', style: TextStyle(color: Colors.white)),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.lightGreen,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pushNamed(AppRoute.report),
+                        icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
+                        label: const Text('Exportar PDF', style: TextStyle(color: Colors.white)),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          side: const BorderSide(color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

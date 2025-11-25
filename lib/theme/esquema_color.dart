@@ -7,4 +7,6 @@ class EsquemaColor {
   static const Color help = Color(0xFF222222);
   static const Color success = Color(0xFF78C841);
   static const Color error = Color(0xFFFB4141);
+  static const Color subir = Color(0xFF473472);
+  static const Color guardar = Color(0xFFD6F4ED);
 }
